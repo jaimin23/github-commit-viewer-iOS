@@ -117,7 +117,6 @@
 				C974F1042644640000A65249 /* ViewModels */,
 				C974F0D4264461BA00A65249 /* AppDelegate.swift */,
 				C974F0D6264461BA00A65249 /* SceneDelegate.swift */,
-				C974F0D8264461BA00A65249 /* ViewController.swift */,
 				C974F0DA264461BA00A65249 /* Main.storyboard */,
 				C974F0DD264461BD00A65249 /* Assets.xcassets */,
 				C974F0DF264461BD00A65249 /* LaunchScreen.storyboard */,
@@ -174,6 +173,7 @@
 			isa = PBXGroup;
 			children = (
 				C974F1102644956500A65249 /* GithubCommitCell.swift */,
+				C974F0D8264461BA00A65249 /* ViewController.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
