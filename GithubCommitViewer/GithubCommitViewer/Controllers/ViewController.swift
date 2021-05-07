@@ -11,8 +11,6 @@ class ViewController: UIViewController {
     
     private lazy var commitsTableView: UITableView = {
         let tableView = UITableView()
-        tableView.delegate = self
-        tableView.dataSource = self
         tableView.register(GithubCommitCell.self, forCellReuseIdentifier: "githubCommitCell")
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
@@ -34,6 +32,8 @@ class ViewController: UIViewController {
     
     private func setupTableView(){
         view.addSubview(commitsTableView)
+        commitsTableView.delegate = self
+        commitsTableView.dataSource = self
         commitsTableView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         commitsTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         commitsTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
@@ -45,7 +45,7 @@ class ViewController: UIViewController {
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return githubViewModel.commitCount > 0 ? githubViewModel.commitCount : 1
+        return githubViewModel.commitCount
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

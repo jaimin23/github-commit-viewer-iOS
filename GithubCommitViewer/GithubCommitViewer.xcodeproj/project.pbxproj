@@ -111,6 +111,7 @@
 		C974F0D3264461BA00A65249 /* GithubCommitViewer */ = {
 			isa = PBXGroup;
 			children = (
+				C974F11426459F6400A65249 /* Controllers */,
 				C974F1072644641D00A65249 /* Views */,
 				C974F1062644641900A65249 /* Models */,
 				C974F1052644641300A65249 /* Services */,
@@ -173,9 +174,16 @@
 			isa = PBXGroup;
 			children = (
 				C974F1102644956500A65249 /* GithubCommitCell.swift */,
-				C974F0D8264461BA00A65249 /* ViewController.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		C974F11426459F6400A65249 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				C974F0D8264461BA00A65249 /* ViewController.swift */,
+			);
+			path = Controllers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
