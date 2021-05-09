@@ -9,18 +9,47 @@ import XCTest
 @testable import GithubCommitViewer
 
 class GithubCommitServiceTests: XCTestCase {
+    
+    var serviceProvider: ServiceProvider<GithubService>!
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
+        serviceProvider = ServiceProvider<GithubService>()
     }
 
     override func tearDownWithError() throws {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
+        serviceProvider = nil
     }
-
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+    
+    func testSuccessAPICall() throws {
+        serviceProvider.load(service: .commitMedOpsRepo, decodeType: [GitCommit].self) { result in
+            switch result {
+                case .success(let commits):
+                    XCTAssertNotNil(commits)
+                default: break
+            }
+        }
+    }
+    
+    func testInvalidRepoAPICall() throws {
+        serviceProvider.load(service: .commitMedOpsRepo, decodeType: [GitCommit].self) { result in
+            switch result {
+                case .failure(let error):
+                    XCTAssertEqual(error, .repoNotFound)
+                default: break
+            }
+        }
+    }
+    
+    func testPrivateRepoAIPCall() throws {
+        serviceProvider.load(service: .commitMedOpsRepo, decodeType: [GitCommit].self) { result in
+            switch result {
+                case .failure(let error):
+                    XCTAssertEqual(error, .repoNotFound)
+                default: break
+            }
+        }
     }
 
     func testPerformanceExample() throws {

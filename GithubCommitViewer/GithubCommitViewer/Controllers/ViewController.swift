@@ -16,7 +16,7 @@ class ViewController: UIViewController {
         return tableView
     }()
     
-    private var githubViewModel = GithubCommitsViewModel()
+    private var githubViewModel = GithubCommitsViewModel(serviceProvider: ServiceProvider<GithubService>())
 
     override func viewDidLoad() {
         super.viewDidLoad()

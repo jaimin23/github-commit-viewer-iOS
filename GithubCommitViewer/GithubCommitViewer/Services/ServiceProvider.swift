@@ -16,6 +16,7 @@ enum Result<T> {
 enum APIServiceError: Error {
     case apiError
     case dataDecodeError
+    case repoNotFound
 }
 
 class ServiceProvider<T: Service> {
@@ -43,10 +44,25 @@ class ServiceProvider<T: Service> {
     
     private func makeAPICall(_ request: URLRequest, completion: @escaping (Result<Data>) -> Void) {
         URLSession.shared.dataTask(with: request) { (data, response, error) in
-            if let _ = error {
+            
+            //Check if there is any error with the API
+            if error != nil {
                 completion(.failure(.apiError))
-            } else if let data = data {
+                return
+            }
+
+            //Check for response code specific error
+            if let response = response as? HTTPURLResponse {
+                if response.statusCode == 404 {
+                    completion(.failure(.repoNotFound))
+                    return
+                }
+            }
+            
+            //Check for data
+            if let data = data {
                 completion(.success(data))
+                return
             } else {
                 completion(.empty)
             }

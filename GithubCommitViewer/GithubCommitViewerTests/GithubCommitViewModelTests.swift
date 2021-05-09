@@ -10,11 +10,11 @@ import XCTest
 
 class GithubCommitViewModelTests: XCTestCase {
     
-    var githubCommitsViewModel: GithubCommitsViewModel?
+    var githubCommitsViewModel: GithubCommitsViewModel!
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
-        githubCommitsViewModel = GithubCommitsViewModel()
+        githubCommitsViewModel = GithubCommitsViewModel(serviceProvider: ServiceProvider<GithubService>())
     }
 
     override func tearDownWithError() throws {
@@ -29,19 +29,17 @@ class GithubCommitViewModelTests: XCTestCase {
     }
     
     func testViewModelCount() throws {
-        githubCommitsViewModel?.viewReady { ready in
-            let commitCount = self.githubCommitsViewModel?.commitCount
+        githubCommitsViewModel.viewReady { ready in
+            let commitCount = self.githubCommitsViewModel.commitCount
             XCTAssertEqual(commitCount, 30)
         }
     }
     
     func testViewModelCommitAt() throws {
         githubCommitsViewModel?.viewReady { _ in
-            guard let commitCount = self.githubCommitsViewModel?.commitCount else {
-                return
-            }
+            let commitCount = self.githubCommitsViewModel.commitCount
             for index in 0..<commitCount {
-                let commit = self.githubCommitsViewModel?.commitAt(index: index)
+                let commit = self.githubCommitsViewModel.commitAt(index: index)
                 XCTAssertNotNil(commit)
             }
             
@@ -59,11 +57,11 @@ class GithubCommitViewModelTests: XCTestCase {
          "message": "Create README.md",
          */
         githubCommitsViewModel?.viewReady { ready in
-            let firstCommit = self.githubCommitsViewModel?.commitAt(index: 0)
+            let firstCommit = self.githubCommitsViewModel.commitAt(index: 0)
             XCTAssertNotNil(firstCommit)
-            XCTAssertEqual(firstCommit?.commitHash, "5e063de94d3bda3a4e6fc6d574294a0afa6cfb94")
-            XCTAssertEqual(firstCommit?.commitInfo?.author?.name, "Jaimin Patel")
-            XCTAssertEqual(firstCommit?.commitInfo?.message, "Create README.md")
+            XCTAssertEqual(firstCommit.commitHash, "5e063de94d3bda3a4e6fc6d574294a0afa6cfb94")
+            XCTAssertEqual(firstCommit.commitInfo?.author?.name, "Jaimin Patel")
+            XCTAssertEqual(firstCommit.commitInfo?.message, "Create README.md")
             
         }
     }

@@ -10,9 +10,11 @@ import Foundation
 class GithubCommitsViewModel {
     
     private var commitsList: [GitCommit] = []
-    private var serviceProvider = ServiceProvider<GithubService>()
+    private var serviceProvider: ServiceProvider<GithubService>
     
-    init() {}
+    init(serviceProvider: ServiceProvider<GithubService>) {
+        self.serviceProvider = serviceProvider
+    }
     
     var commitCount: Int {
         return commitsList.count
