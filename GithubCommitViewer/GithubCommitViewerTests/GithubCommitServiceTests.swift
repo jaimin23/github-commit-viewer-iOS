@@ -1,14 +1,14 @@
 //
-//  GithubCommitViewerTests.swift
+//  GithubCommitServiceTests.swift
 //  GithubCommitViewerTests
 //
-//  Created by Jaimin Patel on 2021-05-06.
+//  Created by Jaimin Patel on 2021-05-08.
 //
 
 import XCTest
 @testable import GithubCommitViewer
 
-class GithubCommitViewerTests: XCTestCase {
+class GithubCommitServiceTests: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
