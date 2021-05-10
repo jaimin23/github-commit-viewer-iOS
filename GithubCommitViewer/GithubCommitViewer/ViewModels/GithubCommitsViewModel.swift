@@ -7,35 +7,30 @@
 
 import Foundation
 
-class GithubCommitsViewModel {
+protocol GithubCommitsViewModelType {
+    func viewReady(completion: @escaping ([GitCommit]?) -> Void)
+}
+
+class GithubCommitsViewModel: GithubCommitsViewModelType {
     
-    private var commitsList: [GitCommit] = []
     private var serviceProvider: ServiceProvider<GithubService>
     
     init(serviceProvider: ServiceProvider<GithubService>) {
         self.serviceProvider = serviceProvider
     }
     
-    var commitCount: Int {
-        return commitsList.count
-    }
-    
-    func viewReady(completion: @escaping (Bool) -> Void) {
+    func viewReady(completion: @escaping ([GitCommit]?) -> Void) {
         serviceProvider.load(service: .commitMedOpsRepo, decodeType: [GitCommit].self) { result in
             switch result {
             case .success(let response):
-                self.commitsList = response
-                completion(true)
+                completion(response)
             case .failure(let error):
                 print(error)
-                completion(false)
+                completion(nil)
             case .empty:
-                completion(false)
+                completion([])
             }
         }
     }
     
-    func commitAt(index: Int) -> GitCommit {
-        return commitsList[index]
-    }
 }

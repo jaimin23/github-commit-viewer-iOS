@@ -10,39 +10,64 @@ import XCTest
 
 class GithubCommitViewModelTests: XCTestCase {
     
-    var githubCommitsViewModel: GithubCommitsViewModel!
-
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-        githubCommitsViewModel = GithubCommitsViewModel(serviceProvider: ServiceProvider<GithubService>())
+    enum ResultType {
+        case success
+        case error
+        case empty
     }
+    
+    var githubCommitsViewModel: GithubCommitsViewModelType!
 
     override func tearDownWithError() throws {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
         githubCommitsViewModel = nil
     }
+    
+    func configureViewModel(resultType: ResultType =  .success) {
+        switch resultType {
+        case .success:
+            githubCommitsViewModel = MockSuccessGithubCommitViewModel() as? GithubCommitsViewModelType
+        case .error:
+            githubCommitsViewModel = MockErrorGithubCommitsViewModel() as? GithubCommitsViewModelType
+        case .empty:
+            githubCommitsViewModel = MockEmptyGithubCommitViewModel() as? GithubCommitsViewModelType
+        }
+    }
 
     func testViewModelViewReady() throws {
-        githubCommitsViewModel?.viewReady { ready in
-            XCTAssertEqual(ready, true)
+        configureViewModel()
+        githubCommitsViewModel.viewReady { commitList in
+            XCTAssertNotNil(commitList)
+        }
+    }
+    
+    func testViewModelViewReadyEmpty() throws {
+        configureViewModel(resultType: .empty)
+        githubCommitsViewModel.viewReady { commitList in
+            guard let commitList = commitList else {
+                XCTFail("No commits found")
+                return
+            }
+            XCTAssertEqual(commitList.count, 0)
         }
     }
     
     func testViewModelCount() throws {
-        githubCommitsViewModel.viewReady { ready in
-            let commitCount = self.githubCommitsViewModel.commitCount
-            XCTAssertEqual(commitCount, 30)
+        configureViewModel()
+        githubCommitsViewModel.viewReady { commitList in
+            guard let commitList = commitList else {
+                XCTFail("No commits found")
+                return
+            }
+            let commitCount = commitList.count
+            XCTAssertEqual(commitCount, 4)
         }
     }
     
-    func testViewModelCommitAt() throws {
-        githubCommitsViewModel?.viewReady { _ in
-            let commitCount = self.githubCommitsViewModel.commitCount
-            for index in 0..<commitCount {
-                let commit = self.githubCommitsViewModel.commitAt(index: index)
-                XCTAssertNotNil(commit)
-            }
-            
+    func testViewModelReadyError() throws {
+        configureViewModel(resultType: .error)
+        githubCommitsViewModel.viewReady { commitList in
+            XCTAssertNil(commitList)
         }
     }
     
@@ -56,8 +81,16 @@ class GithubCommitViewModelTests: XCTestCase {
          }
          "message": "Create README.md",
          */
-        githubCommitsViewModel?.viewReady { ready in
-            let firstCommit = self.githubCommitsViewModel.commitAt(index: 0)
+        configureViewModel()
+        githubCommitsViewModel.viewReady { commitList in
+            guard let commitList = commitList else {
+                XCTFail("No commits found")
+                return
+            }
+            guard let firstCommit = commitList.first else {
+                XCTFail("No commit found")
+                return
+            }
             XCTAssertNotNil(firstCommit)
             XCTAssertEqual(firstCommit.commitHash, "5e063de94d3bda3a4e6fc6d574294a0afa6cfb94")
             XCTAssertEqual(firstCommit.commitInfo?.author?.name, "Jaimin Patel")
@@ -65,12 +98,4 @@ class GithubCommitViewModelTests: XCTestCase {
             
         }
     }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
-    }
-
 }

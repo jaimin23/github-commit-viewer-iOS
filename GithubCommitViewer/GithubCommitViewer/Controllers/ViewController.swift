@@ -17,15 +17,25 @@ class ViewController: UIViewController {
     }()
     
     private var githubViewModel = GithubCommitsViewModel(serviceProvider: ServiceProvider<GithubService>())
-
+    
+    
+    private var commitList: [GitCommit]?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTableView()
         githubViewModel.viewReady { result in
-            if result {
-                DispatchQueue.main.async {
-                    self.commitsTableView.reloadData()
+            if let result = result {
+                if result.count > 0 {
+                    DispatchQueue.main.async {
+                        self.commitList = result
+                        self.commitsTableView.reloadData()
+                    }
+                } else {
+                    //TODO:Handle empty case
                 }
+            } else {
+                //TODO:Handle the custom error
             }
         }
     }
@@ -45,15 +55,17 @@ class ViewController: UIViewController {
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return githubViewModel.commitCount
+        return commitList?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "githubCommitCell") as? GithubCommitCell else {
             fatalError("Cell could not be created")
         }
-        let commit = githubViewModel.commitAt(index: indexPath.row)
-        cell.configure(gitCommit: commit)
+        if let commit = commitList?[indexPath.row] {
+            cell.configure(gitCommit: commit)
+        }
         return cell
+            
     }
 }

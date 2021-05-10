@@ -9,9 +9,6 @@ import Foundation
 
 enum GithubService {
     case commitMedOpsRepo
-    case commitPrivateRepo
-    case commitRepoNotFound
-    
 }
 
 extension GithubService: Service {
@@ -23,10 +20,6 @@ extension GithubService: Service {
         switch self {
         case .commitMedOpsRepo:
             return "/repos/jaimin23/MedOps_iOS/commits"
-        case .commitPrivateRepo:
-            return "/repos/jaimin23/Angular-Tutorials/commits"
-        case .commitRepoNotFound:
-            return "/repos/jaimin23/dawjdiwdaid/commits"
         }
     }
     
@@ -37,10 +30,6 @@ extension GithubService: Service {
     var requestMethodType: RequestMethodType {
         switch self {
         case .commitMedOpsRepo:
-            return .get
-        case .commitPrivateRepo:
-            return .get
-        case .commitRepoNotFound:
             return .get
         }
     }
